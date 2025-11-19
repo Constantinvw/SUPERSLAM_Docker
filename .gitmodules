@@ -1,0 +1,9 @@
+[submodule "src/SUPER_SLAM3"]
+	path = src/SUPER_SLAM3
+	url = https://github.com/Constantinvw/SUPER_SLAM3.git
+[submodule "src/Pangolin"]
+	path = src/Pangolin
+	url = https://github.com/stevenlovegrove/Pangolin.git
+[submodule "src/opencv"]
+	path = src/opencv
+	url = https://github.com/opencv/opencv.git
