@@ -1,0 +1,10 @@
+git wget curl unzip xauth x11-apps libboost-all-dev libssl-dev libopencv-dev\
+build-essential cmake \
+libgl1-mesa-dev libglew-dev libpython3-dev \
+libeigen3-dev pkg-config \
+python3 python3-pip python3-numpy \
+libjpeg-turbo8 libpng16-16 libtiff5 \
+libavcodec-dev libavformat-dev libswscale-dev \
+libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
+libgtk-3-dev && \
+apt-get clean
