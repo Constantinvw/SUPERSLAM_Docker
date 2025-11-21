@@ -1,4 +1,4 @@
-FROM nvidia/opengl:1.2-glvnd-runtime-ubuntu20.04
+FROM nvidia/cuda:12.1.1-devel-ubuntu20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -14,6 +14,13 @@ RUN apt-get update && apt-get install -y \
     libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
     libgtk-3-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+# RUN cd /opt && \
+#     wget https://github.com/Kitware/CMake/releases/download/v3.27.6/cmake-3.27.6-linux-x86_64.sh && \
+#     chmod +x cmake-3.27.6-linux-x86_64.sh && \
+#     ./cmake-3.27.6-linux-x86_64.sh --skip-license --prefix=/usr/local && \
+#     rm cmake-3.27.6-linux-x86_64.sh
 
 # OpenCV 4.4.0
 COPY src/opencv /tmp/opencv
@@ -35,9 +42,14 @@ RUN cd /tmp/Pangolin && \
     make -j"$(nproc)" && make install && \
     rm -rf /tmp/Pangolin
 
+
+COPY include/libtorch /opt/libtorch
+
 # ORB-SLAM3 Download
 COPY src/SUPER_SLAM3 /ORB_SLAM3
 WORKDIR /ORB_SLAM3
+
+RUN grep -rl "monotonic_clock" /ORB_SLAM3/Examples | xargs sed -i 's/monotonic_clock/steady_clock/g'
 
 # Thirdparty/DBoW2
 RUN cd Thirdparty/DBoW2 && \
@@ -64,5 +76,7 @@ RUN cd Vocabulary && \
 # ORB-SLAM3 Build
 RUN mkdir build && \
     cd build && \
-    cmake .. -DCMAKE_BUILD_TYPE=Release && \
+    cmake .. -DCMAKE_BUILD_TYPE=Release  -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -DCMAKE_CXX_FLAGS="-w" && \
     make -j4
+
+    # -DCMAKE_PREFIX_PATH=/opt/libtorch -DTorch_DIR=/opt/libtorch/share/cmake/Torch
